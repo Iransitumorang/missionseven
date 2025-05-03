@@ -8,20 +8,22 @@ function Home() {
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState('add');
   const [selectedVideo, setSelectedVideo] = useState(null);
+  const DEFAULT_AVATAR = "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=500&auto=format&fit=crop&q=60";
+  const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&auto=format&fit=crop&q=60";
   const [formData, setFormData] = useState({
     title: "",
     price: "",
     author: "",
     description: "",
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&auto=format&fit=crop&q=60",
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=500&auto=format&fit=crop&q=60"
+    image: DEFAULT_IMAGE,
+    avatar: DEFAULT_AVATAR
   });
   const [email, setEmail] = useState("");
 
   // Load initial data
   useEffect(() => {
-    const loadVideos = () => {
-      const allVideos = getAllVideos();
+    const loadVideos = async () => {
+      const allVideos = await getAllVideos();
       setVideos(allVideos);
     };
     loadVideos();
@@ -44,28 +46,27 @@ function Home() {
   };
 
   // CREATE/UPDATE: Submit form
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
     const videoData = {
       ...formData,
-      price: parseInt(formData.price)
+      price: parseInt(formData.price),
+      avatar: DEFAULT_AVATAR,
+      image: DEFAULT_IMAGE
     };
-
     if (modalMode === 'add') {
       // Create new video
-      const newVideo = addVideo(videoData);
+      const newVideo = await addVideo(videoData);
       setVideos(prev => [...prev, newVideo]);
     } else {
       // Update existing video
-      const updatedVideo = updateVideo(selectedVideo.id, videoData);
+      const updatedVideo = await updateVideo(selectedVideo.id, videoData);
       if (updatedVideo) {
         setVideos(prev => prev.map(video => 
           video.id === selectedVideo.id ? updatedVideo : video
         ));
       }
     }
-
     handleCloseModal();
   };
 
@@ -85,17 +86,14 @@ function Home() {
     setShowModal(true);
   };
 
-  // DELETE: Hapus video
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm('Apakah Anda yakin ingin menghapus video ini?')) {
-      const deletedVideo = deleteVideo(id);
-      if (deletedVideo) {
-        setVideos(prev => prev.filter(video => video.id !== id));
-      }
+      await deleteVideo(id);
+      setVideos(prev => prev.filter(video => video.id !== id));
     }
   };
 
-  // Close modal dan reset state
+  // modal dan reset state
   const handleCloseModal = () => {
     setShowModal(false);
     setSelectedVideo(null);
@@ -104,12 +102,11 @@ function Home() {
       price: "",
       author: "",
       description: "",
-      image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&auto=format&fit=crop&q=60",
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=500&auto=format&fit=crop&q=60"
+      image: DEFAULT_IMAGE,
+      avatar: DEFAULT_AVATAR
     });
   };
 
-  // Handle click outside modal
   const handleModalClick = (e) => {
     if (e.target.classList.contains('modal')) {
       handleCloseModal();
@@ -118,7 +115,6 @@ function Home() {
 
   return (
     <div>
-      {/* Hero Section */}
       <section className="py-5 mx-75px my-4" style={{
         background: 'linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1440&auto=format&fit=crop")',
         backgroundSize: 'cover',
@@ -142,7 +138,6 @@ function Home() {
         </div>
       </section>
 
-      {/* Main Content */}
       <div className="container-section mt-5">
         <div className="d-flex justify-content-between align-items-center mb-4">
           <h2 className="section-title">Koleksi Video Pembelajaran Unggulan</h2>
@@ -155,8 +150,8 @@ function Home() {
                 price: "",
                 author: "",
                 description: "",
-                image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&auto=format&fit=crop&q=60",
-                avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=500&auto=format&fit=crop&q=60"
+                image: DEFAULT_IMAGE,
+                avatar: DEFAULT_AVATAR
               });
               setShowModal(true);
             }}
@@ -166,7 +161,6 @@ function Home() {
           </button>
         </div>
 
-        {/* Video Grid */}
         <div className="row g-4">
         {videos.map((video) => (
             <div className="col-md-4" key={video.id}>
@@ -190,7 +184,7 @@ function Home() {
                       <span className="text-warning">★</span> {video.rating}
                       <span className="text-muted ms-2">({video.students})</span>
                     </div>
-                    <h6 className="text-success fw-bold mb-0">Rp {video.price.toLocaleString()}</h6>
+                    <h6 className="text-success fw-bold mb-0">$ {video.price.toLocaleString()}</h6>
                   </div>
                   <div className="btn-group w-100 mt-3">
                     <button className="btn btn-outline-primary btn-sm" onClick={() => handleView(video)}>
@@ -210,7 +204,6 @@ function Home() {
         </div>
       </div>
 
-      {/* Newsletter Section */}
       <section className="newsletter py-5 mx-75px my-4" style={{
         background: 'linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=1440&auto=format&fit=crop")',
         backgroundSize: 'cover',
@@ -255,7 +248,6 @@ function Home() {
         </div>
       </section>
 
-      {/* Modal */}
       {showModal && (
         <div className="modal show d-block" tabIndex="-1" onClick={handleModalClick}>
           <div className="modal-dialog" onClick={e => e.stopPropagation()}>
