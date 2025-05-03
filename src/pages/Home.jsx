@@ -139,7 +139,7 @@ function Home() {
       </section>
 
       <div className="container-section mt-5">
-        <div className="d-flex justify-content-between align-items-center mb-4">
+        <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-2">
           <h2 className="section-title">Koleksi Video Pembelajaran Unggulan</h2>
           <button 
             className="btn-add-video" 
