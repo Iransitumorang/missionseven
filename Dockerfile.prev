@@ -1,0 +1,12 @@
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+
+# akan menghasilkan dist/ yang berisi file hasil build aplikasi. File-file ini adalah versi yang sudah dioptimalkan dan siap untuk dijalankan di lingkungan produksi.
+RUN npm run build
+
+# Ini tidak membuka port.Hanya metadata.
+EXPOSE 3001
+CMD [ "npm", "run", "preview" ]
