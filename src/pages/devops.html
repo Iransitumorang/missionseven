@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevOps Learning Path - Iran Situmorang</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Urbanist:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #060913;
+            --bg-secondary: #0d1322;
+            --accent-green: #deff9a;
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --border-color: rgba(222, 255, 154, 0.15);
+        }
+
+        * {
+            box-shadow: none;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Urbanist', sans-serif;
+            background-color: #020406;
+            color: var(--text-main);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .presentation-container {
+            width: 1280px;
+            height: 720px;
+            background-color: #040712;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(147, 51, 234, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(6, 182, 212, 0.15) 0%, transparent 40%);
+            position: relative;
+            box-shadow: 0 0 60px -15px rgba(222, 255, 154, 0.2), 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(222, 255, 154, 0.1);
+            overflow: hidden;
+            perspective: 1600px;
+            perspective-origin: 50% 50%;
+        }
+
+        .cosmic-stars {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background-image: 
+                radial-gradient(#ffffff 1px, transparent 10px),
+                radial-gradient(#ffffff 2px, transparent 20px),
+                radial-gradient(rgba(222, 255, 154, 0.4) 1.5px, transparent 15px);
+            background-size: 300px 300px, 400px 400px, 250px 250px;
+            background-position: 0 0, 150px 150px, 70px 120px;
+            animation: cosmicRotation 90s linear infinite;
+            opacity: 0.6;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        @keyframes cosmicRotation {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 50px 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            background: rgba(6, 9, 19, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            backface-visibility: hidden;
+            transform-style: preserve-3d;
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease;
+            z-index: 2;
+        }
+
+        .slide.next-stage {
+            opacity: 0;
+            transform: rotateY(90deg) translateZ(300px);
+            pointer-events: none;
+        }
+
+        .slide.prev-stage {
+            opacity: 0;
+            transform: rotateY(-90deg) translateZ(300px);
+            pointer-events: none;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: rotateY(0deg) translateZ(0px);
+            pointer-events: auto;
+            z-index: 10;
+        }
+
+        .slide.exit-next {
+            opacity: 0;
+            transform: rotateY(-90deg) translateZ(300px);
+            pointer-events: none;
+        }
+
+        .slide.exit-prev {
+            opacity: 0;
+            transform: rotateY(90deg) translateZ(300px);
+            pointer-events: none;
+        }
+
+        .slide-title-page {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: rgba(4, 7, 15, 0.7);
+        }
+
+        h1 {
+            font-size: 54px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+            text-shadow: 0 0 25px rgba(222, 255, 154, 0.2);
+        }
+
+        h2 {
+            font-size: 34px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 15px;
+        }
+
+        h2 span {
+            color: var(--accent-green);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 22px;
+            text-shadow: 0 0 10px rgba(222, 255, 154, 0.4);
+        }
+
+        .subtitle {
+            font-size: 22px;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+        }
+
+        .meta-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            color: var(--accent-green);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 0 8px rgba(222, 255, 154, 0.3);
+        }
+
+        .tech-box {
+            background-color: rgba(13, 19, 34, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-left: 4px solid var(--accent-green);
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+        }
+
+        .tech-box h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: var(--accent-green);
+        }
+
+        .tech-box p, .tech-box li {
+            font-size: 16px;
+            line-height: 1.5;
+            color: var(--text-main);
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: stretch;
+        }
+
+        code-block {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: #04060b;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            font-size: 13px;
+            line-height: 1.4;
+            display: block;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .code-keyword { color: #f97316; }
+        .code-comment { color: #64748b; font-style: italic; }
+        .code-string { color: #22c55e; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 5px;
+            font-size: 13px;
+        }
+
+        th {
+            background-color: #0d1322;
+            color: var(--accent-green);
+            text-align: left;
+            padding: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        td {
+            padding: 8px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-main);
+        }
+
+        tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .table-container {
+            overflow-y: auto;
+            max-height: 440px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            background-color: rgba(6, 9, 19, 0.6);
+        }
+
+        /* --- LAYOUT DOKUMEN FOTO ASSETS (SLIDE 15) --- */
+        .assets-gallery-layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 25px;
+            height: 450px;
+        }
+
+        .assets-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .assets-item-btn {
+            background: rgba(13, 19, 34, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 12px 15px;
+            border-radius: 4px;
+            color: var(--text-muted);
+            text-align: left;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .assets-item-btn:hover {
+            border-color: var(--accent-green);
+            color: #fff;
+            background: rgba(222, 255, 154, 0.05);
+        }
+
+        .assets-item-btn.active {
+            background: var(--accent-green);
+            color: #000;
+            border-color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        .assets-item-btn .ref-link {
+            font-size: 11px;
+            color: #38bdf8;
+            text-decoration: underline;
+        }
+        .assets-item-btn.active .ref-link {
+            color: #0369a1;
+        }
+
+        .assets-viewer {
+            background: rgba(4, 6, 11, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding: 15px;
+        }
+
+        .assets-viewer img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: none;
+        }
+
+        .assets-viewer img.active {
+            display: block;
+            animation: fadeInAsset 0.4s ease forwards;
+        }
+
+        @keyframes fadeInAsset {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Footer & Navigasi */
+        .footer-controls {
+            position: absolute;
+            bottom: 25px;
+            left: 80px;
+            right: 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .pagination-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .page-btn-container {
+            position: relative;
+        }
+
+        .page-num-btn {
+            background-color: rgba(13, 19, 34, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            width: 26px;
+            height: 26px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+
+        .page-btn-container::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 36px;
+            left: 50%;
+            transform: translateX(-50%) translateY(5px);
+            background-color: #1e293b;
+            color: #ffffff;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: 'Urbanist', sans-serif;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+            z-index: 200;
+        }
+
+        .page-btn-container:hover::after {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .page-num-btn:hover {
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+            box-shadow: 0 0 8px rgba(222, 255, 154, 0.3);
+        }
+
+        .page-btn-container.active .page-num-btn {
+            background-color: var(--accent-green);
+            border-color: var(--accent-green);
+            color: #000000;
+            box-shadow: 0 0 12px rgba(222, 255, 154, 0.5);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn {
+            background-color: rgba(13, 19, 34, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-green);
+            color: #000;
+            border-color: var(--accent-green);
+            box-shadow: 0 0 10px rgba(222, 255, 154, 0.4);
+        }
+
+        .slide-counter {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background-color: var(--accent-green);
+            box-shadow: 0 0 10px rgba(222, 255, 154, 0.7);
+            transition: width 0.3s ease;
+            z-index: 110;
+        }
+
+        ul {
+            list-style-position: inside;
+            margin-left: 5px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        
+        <div class="cosmic-stars"></div>
+        
+        <div class="slide slide-title-page active">
+            <div class="meta-text" style="margin-bottom: 20px;">TARGET BELAJAR DEVOPS</div>
+            <h1>DevOps Infrastructure &<br>Containerization Foundation</h1>
+            <div class="subtitle" style="margin-top: 10px;">Fokus: Linux System Administration & Docker Environment</div>
+            <div class="meta-text" style="color: #ffffff;">Presenting by Iran Situmorang</div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--text-muted); margin-top: 15px;">DevOps Journey 2026</div>
+        </div>
+
+        <div class="slide next-stage">
+            <h2><span>01 /</span> DevOps Learning Path Matrix</h2>
+            <div class="table-container" style="max-height: 500px;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 8%;">No</th>
+                            <th style="width: 30%;">Fokus Utama</th>
+                            <th>Materi & Task</th>
+                            <th style="width: 15%;">Sumber</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="background-color: rgba(222, 255, 154, 0.04);">
+                            <td>1</td>
+                            <td><strong>Linux & Fundamental</strong></td>
+                            <td>Command dasar Linux, Konsep isolasi (Container vs VM), Setup Environment.</td>
+                            <td>Geeksforgeeks</td>
+                        </tr>
+                        <tr style="background-color: rgba(222, 255, 154, 0.04);">
+                            <td>2</td>
+                            <td><strong>Docker Containerization</strong></td>
+                            <td>Docker CLI, Menulis Dockerfile yang efisien, Volume & Networking.</td>
+                            <td>YT PZN</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Orkestrasi & Compose</td>
+                            <td>docker-compose.yml, Multi-container networking, Data persistence.</td>
+                            <td>YT PZN</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Kubernetes</td>
+                            <td>File Deployment Service, Command Kuber, Cek Logs Pods, Up-down Deploy, Secret, Configmap</td>
+                            <td>YT PZN</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>CI/CD & Automation</td>
+                            <td>Docker Hub Registry, CI/CD Pipeline (GitHub Actions), Intro K8s.</td>
+                            <td>YT</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>Tools Monitoring</td>
+                            <td>Grafana, Zabbix, ELK, Jennifer</td>
+                            <td>YT</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="margin-top: 20px; font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--text-muted);">
+                Mentor: Abdul, Gema, Ulza | Sumber Pendukung: Dea Afrizal, v4.niomic.id, AI
+            </div>
+        </div>
+
+        <div class="slide next-stage">
+            <h2><span>02 /</span> Strategi & Jadwal Eksplorasi 1 Bulan</h2>
+            <div class="tech-grid">
+                <div class="tech-box">
+                    <h3>Rencana Kerja Bulanan</h3>
+                    <ul>
+                        <li><strong>Minggu 1 (Fase Inkubasi):</strong> Setup VirtualBox, Instalasi Ubuntu Server, Eksplorasi Linux Administration & Fundamental Docker CLI.</li>
+                        <li><strong>Minggu 2 (Fase Komposisi):</strong> Konstruksi Dockerfile Multi-environment, Pemahaman Network Bridge, Volume Data, dan Multi-container orchestration.</li>
+                        <li><strong>Minggu 3 (Fase Orkestrasi):</strong> Migrasi arsitektur kontainer tunggal ke Kluster Kubernetes lokal, Manajemen Pods, Deployment, dan Services.</li>
+                        <li><strong>Minggu 4 (Fase Otomasi & Monitoring):</strong> Integrasi CI/CD Pipeline via GitHub Actions, Push Registry, dan Setup Monitoring Metrics Stack.</li>
+                    </ul>
+                </div>
+                <div class="tech-box" style="border-left-color: var(--text-main);">
+                    <h3>Strategi Eksekusi Task</h3>
+                    <ul>
+                        <li><strong>Hands-on Environment:</strong> Mengurangi porsi teori abstrak; implementasi langsung pada local host server Linux Ubuntu via hypervisor.</li>
+                        <li><strong>Error Logging & Documentation:</strong> Mencatat seluruh state error (seperti connection timeout, port conflict) secara sistematis untuk basis troubleshooting.</li>
+                        <li><strong>Checkpoint Review:</strong> Mengadakan sinkronisasi teknis mingguan bersama mentor guna memvalidasi efisiensi konfigurasi environment.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide next-stage">
+            <h2><span>03 /</span> Agenda Belajar Minggu Ini</h2>
+            <div style="display: flex; flex-direction: column; gap: 20px; margin-top: 10px;">
+                <div class="tech-box" style="margin-bottom: 0;">
+                    <div class="meta-text" style="font-size: 14px; margin-bottom: 5px;">MATERI 01</div>
+                    <h3 style="font-size: 26px; color: #fff;">Linux & Fundamental</h3>
+                    <p style="color: var(--text-muted); font-family: 'JetBrains Mono', monospace; margin-top: 10px;">
+                        Command dasar Linux, Konsep isolasi (Container vs VM), Setup Environment.
+                    </p>
+                </div>
+                <div class="tech-box" style="margin-bottom: 0;">
+                    <div class="meta-text" style="font-size: 14px; margin-bottom: 5px;">MATERI 02</div>
+                    <h3 style="font-size: 26px; color: #fff;">Docker Containerization</h3>
+                    <p style="color: var(--text-muted); font-family: 'JetBrains Mono', monospace; margin-top: 10px;">
+                        Docker CLI, Menulis Dockerfile yang efisien, Volume & Networking.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide next-stage">
+            <h2><span>04 /</span> Setup Environment: VirtualBox & Ubuntu Server</h2>
+            <div class="tech-grid">
+                <div class="tech-box" style="margin-bottom:0;">
+                    <h3>Spesifikasi Alokasi Resource VM</h3>
+                    <p>Implementasi deployment lokal menggunakan hypervisor Oracle VirtualBox dengan parameter isolasi hardware sebagai berikut:</p>
+                    <ul style="margin-top: 15px; font-family: 'JetBrains Mono', monospace; color: var(--accent-green);">
+                        <li>Alokasi Prosesor : Min. 3 vCPU</li>
+                        <li>Alokasi Memori    : 4GB RAM</li>
+                        <li>Alokasi Storage   : 50GB Virtual Disk</li>
+                    </ul>
+                </div>
+                <div class="tech-box" style="border-left-color: var(--text-muted); margin-bottom:0;">
+                    <h3>Konfigurasi Guest OS</h3>
+                    <p>Menggunakan **Ubuntu Server** sebagai operating system dasar di dalam VirtualBox. Konfigurasi awal mencakup pemutakhiran paket kernel repository, pembuatan user non-root dengan hak akses sudoers, serta aktivasi VirtualBox Guest Additions untuk integrasi eksternal folder file-sharing host OS.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide next-stage">
+            <h2><span>05 /</span> Linux System Administration Fundamental</h2>
+            <div class="tech-box">
+                <h3>Definisi & Core Objective</h3>
+                <p>Linux System Administration adalah pilar operasional untuk mengelola, mengatur, mengamankan, dan merawat server berbasis Linux. Fokus utamanya adalah memastikan stabilitas sistem (uptime), optimasi alokasi resource (CPU, RAM, Storage), manajemen akses pengguna (multi-user authorization), serta pengamanan lingkungan server dari celah eksploitasi eksternal.</p>
+            </div>
+            <div class="tech-grid">
+                <div class="tech-box" style="margin-bottom: 0;">
+                    <h3>Sistem Operasi Server</h3>
+                    <p>Berbeda dengan sistem operasi ber-GUI, Linux beroperasi langsung pada layer kernel CLI yang hemat resource, menjadikannya standar baku infrastruktur production server secara global.</p>
+                </div>
+                <div class="tech-box" style="margin-bottom: 0;">
+                    <h3>Resource Health Check</h3>
+                    <p>Monitoring berkala terhadap proses yang berjalan, pemakaian RAM swap space, dan I/O disk storage mutlak dilakukan guna mencegah kegagalan sistem akibat kehabisan resource.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide next-stage">
+            <h2><span>06 /</span> Linux Directory Structure Architecture</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 15%;">Direktori</th>
+                            <th style="width: 45%;">Fungsi Teknis / Deskripsi</th>
+                            <th style="width: 40%;">Isi Konten Utama</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>/bin</code></td><td>Binary perintah dasar sistem</td><td><code>ls</code>, <code>cp</code>, <code>mv</code>, <code>cat</code></td></tr>
+                        <tr><td><code>/sbin</code></td><td>Binary khusus untuk System Administrator (sysadmin)</td><td><code>reboot</code>, <code>fdisk</code>, <code>iptables</code></td></tr>
+                        <tr><td><code>/etc</code></td><td>Semua file konfigurasi sistem global</td><td>Konfigurasi network, services, sshd, dll.</td></tr>
+                        <tr><td><code>/home</code></td><td>Home directory untuk user reguler non-root</td><td>Data/file spesifik user (contoh: <code>/home/iran</code>)</td></tr>
+                        <tr><td><code>/root</code></td><td>Home directory terisolasi khusus superuser root</td><td>Data konfigurasi personal milik user root</td></tr>
+                        <tr><td><code>/var</code></td><td>Data variabel dinamis yang isinya terus berubah-ubah</td><td>Sistem log (<code>/var/log</code>), cache, database runtime</td></tr>
+                        <tr><td><code>/tmp</code></td><td>File temporary (sementara) sistem</td><td>Otomatis dihapus total saat server reboot</td></tr>
+                        <tr><td><code>/proc</code></td><td>Virtual filesystem berisi info proses & kernel runtime</td><td>Bukan file fisik di disk, representasi status memori</td></tr>
+                        <tr><td><code>/sys</code></td><td>Virtual filesystem parameter kernel & eksternal hardware</td><td>Atribut device subsystem dan driver eksternal</td></tr>
+                        <tr><td><code>/usr</code></td><td>Program, binary, and libraries user-installed</td><td>Aplikasi pendukung di luar core os kernel</td></tr>
+                        <tr><td><code>/opt</code></td><td>Software proprietary / third-party instalasi manual</td><td>Add-on aplikasi skala besar standalone</td></tr>
+                        <tr><td><code>/dev</code></td><td>Representasi file dari hardware device driver</td><td>Storage disk, USB storage, system terminal hardware</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="slide next-stage">
+            <h2><span>07 /</span> Essential Linux Commands Matrix</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Command</th>
+                            <th>Fungsi Teknis Operasional</th>
+                            <th>Contoh Eksekusi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>pwd</code></td><td>Menampilkan absolute path direktori kerja saat ini</td><td><code>pwd</code></td></tr>
+                        <tr><td><code>ls -l</code></td><td>Menampilkan daftar file/folder disertai permission dan metadata</td><td><code>ls -l /var/log</code></td></tr>
+                        <tr><td><code>cd</code></td><td>Berpindah ke target direktori sistem</td><td><code>cd /etc/nginx</code></td></tr>
+                        <tr><td><code>mkdir -p</code></td><td>Membuat direktori baru secara rekursif termasuk parent folder</td><td><code>mkdir -p /mnt/data/app</code></td></tr>
+                        <tr><td><code>touch</code></td><td>Membuat file kosong baru atau memperbarui timestamp file</td><td><code>touch index.js</code></td></tr>
+                        <tr><td><code>chmod</code></td><td>Mengubah bit permission atau hak akses pada file/direktori</td><td><code>chmod 755 deploy.sh</code></td></tr>
+                        <tr><td><code>chown</code></td><td>Mengubah kepemilikan user dan grup atas suatu file/direktori</td><td><code>chown root:root config.conf</code></td></tr>
+                        <tr><td><code>df -h</code></td><td>Menampilkan sisa ruang penyimpanan disk dalam format human-readable</td><td><code>df -h</code></td></tr>
+                        <tr><td><code>free -h</code></td><td>Menampilkan kapasitas RAM yang digunakan, kosong, dan cache-buffer</td><td><code>free -h</code></td></tr>
+                        <tr><td><code>top / ps</code></td><td>Monitoring proses aktif secara real-time dan analisis ID proses (PID)</td><td><code>ps aux | grep node</code></td></tr>
+                        <tr><td><code>grep</code></td><td>Melakukan pencarian substring atau ekspresi reguler dalam file</td><td><code>grep "ERROR" app.log</code></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="slide next-stage">
+            <h2><span>08 /</span> Secure Shell (SSH) Architecture & Network Topology</h2>
+            <div class="tech-box">
+                <h3>Protokol Enkripsi Akses Jarak Jauh</h3>
+                <p>SSH (Secure Shell) bekerja pada Application Layer (Default Port 22) untuk mengontrol host server jarak jauh melalui saluran komunikasi terenkripsi kriptografi asymmetric key pair (Public & Private Key).</p>
+            </div>
+            <div class="tech-grid">
+                <div class="tech-box" style="margin-bottom: 0;">
+                    <h3>Elemen Jaringan & Keamanan</h3>
+                    <ul>
+                        <li><strong>SSH Client & Server:</strong> Pengirim request (Laptop) melakukan jabat tangan kriptografi ke daemon SSH Server (sshd) di dalam target VM.</li>
+                        <li><strong>Layer Firewall:</strong> Keamanan berlapis yang dikelola oleh Security Group (Gerbang utama network) dan lokal Firewall/IPTables (Satpam internal sistem).</li>
+                    </ul>
+                </div>
+                <div class="tech-box" style="margin-bottom: 0;">
+                    <h3>Analisis Kegagalan Koneksi</h3>
+                    <ul>
+                        <li><strong>Connection Timed Out:</strong> Request tertahan di layer terluar akibat aturan Firewall/Security Group yang memblokir akses port.</li>
+                        <li><strong>Connection Refused:</strong> Paket data mencapai host, namun service daemon SSH Server mati atau tidak mendengarkan Port 22.</li>
+                        <li><strong>Permission Denied:</strong> Kegagalan otentikasi keypair atau kecacatan hak akses user.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide next-stage">
+            <h2><span>09 /</span> Konsep Isolasi: Virtual Machine vs Container</h2>
+            <div class="tech-box">
+                <h3>Mekanisme Abstraksi Hardware dan Operating System</h3>
+                <p>VM adalah emulasi komputer lengkap yang berjalan di atas software bernama hypervisor. Perbedaan mendasar terletak pada level abstraksi dan efisiensi pembagian instruksi komputasi host.</p>
+            </div>
+            <div class="tech-grid">
+                <div class="tech-box" style="margin-bottom: 0;">
+                    <h3>Virtual Machine (Hypervisor-Based)</h3>
+                    <ul>
+                        <li>Abstraksi pada level physical hardware via Hypervisor.</li>
+                        <li>Setiap instance VM mewajibkan instalasi penuh Guest OS secara utuh lengkap dengan struktur Kernel tersendiri.</li>
+                        <li>Resource allocation bersifat kaku (hard-allocated) sehingga beban overhead sistem sangat tinggi.</li>
+                    </ul>
+                </div>
+                <div class="tech-box" style="margin-bottom: 0;">
+                    <h3>Container (Docker)</h3>
+                    <ul>
+                        <li>Abstraksi langsung pada level User Space di atas Kernel Host OS menggunakan fitur native kernel Linux: <strong>namespaces</strong> (isolasi network, pid, mount) and <strong>cgroups</strong> (pembatasan kuota CPU/RAM).</li>
+                        <li>Tidak memerlukan duplikasi Guest OS; berukuran sangat kecil (megabytes) dan aktif dalam hitungan milidetik.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide next-stage">
+            <h2><span>10 /</span> Kapan Menggunakan VM vs Docker Container di Production</h2>
+            <div class="tech-grid">
+                <div class="tech-box" style="border-left-color: #38bdf8;">
+                    <h3>Pakai VM ketika:</h3>
+                    <ul style="font-size: 14px;">
+                        <li>Butuh isolasi penuh sampai level OS dan kernel.</li>
+                        <li>Menjalankan OS berbeda dalam satu host (misalnya Linux dan Windows).</li>
+                        <li>Menjalankan aplikasi legacy yang sulit di-containerize.</li>
+                        <li>Membutuhkan driver, kernel module, atau konfigurasi OS khusus.</li>
+                        <li>Kebutuhan compliance dan keamanan server yang sangat ketat.</li>
+                    </ul>
+                </div>
+                <div class="tech-box">
+                    <h3>Pakai Docker Container ketika:</h3>
+                    <ul style="font-size: 14px;">
+                        <li>Menjalankan aplikasi modern (web, API, microservices).</li>
+                        <li>Membutuhkan deployment yang cepat dan konsisten di tiap env.</li>
+                        <li>Ingin efisiensi alokasi resource komputasi server.</li>
+                        <li>Membutuhkan scaling horizontal secara dinamis (e.g. Kubernetes).</li>
+                        <li>Membangun infrastruktur otomatisasi CI/CD pipeline.</li>
+                        <li>Menjalankan aplikasi stateless/service yang mudah direplikasi.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="tech-box" style="margin-bottom: 0; padding: 15px;">
+                <h3>Pola Arsitektur Global Production Server: VM + Docker</h3>
+                <p style="font-size: 14px; margin-bottom: 5px;">Di dunia nyata industri, strateginya adalah gabungan keduanya: VM digunakan sebagai server host, dan Docker berjalan di dalam VM.</p>
+                <code-block style="font-size: 12px; padding: 8px 15px;">Server Fisik (Baremetal)
+└── VM Ubuntu (Resource Host)
+    └── Docker Engine (Container Runtime)
+        ├── Frontend Container
+        ├── Backend API Container
+        ├── Nginx Reverse Proxy
+        └── Database Core Engine</code-block>
+            </div>
+        </div>
+
+        <div class="slide next-stage">
+            <h2><span>11 /</span> Docker Runtime Engine & Isolation Core</h2>
+            <div class="tech-box">
+                <h3>Definisi Platform Docker</h3>
+                <p>Docker adalah platform terintegrated yang berfungsi membungkus kode aplikasi beserta seluruh dependensi library-nya ke dalam satu unit container steril terisolasi, memastikan aplikasi berjalan konsisten di semua env server host.</p>
+            </div>
+            <div class="tech-grid">
+                <div class="tech-box" style="margin-bottom: 0;">
+                    <h3>Komponen Arsitektur Client-Server</h3>
+                    <ul>
+                        <li><strong>Docker CLI:</strong> Komponen antarmuka pengguna tempat perintah diketikkan (seperti <code>docker run</code>).</li>
+                        <li><strong>Docker Daemon (dockerd):</strong> Proses background persisten yang mengelola siklus objek Docker (Images, Containers, Volumes, Networks).</li>
+                        <li><strong>Docker Hub Registry:</strong> Repositori pusat pendistribusian Docker Images secara global.</li>
+                    </ul>
+                </div>
+                <div class="tech-box" style="margin-bottom: 0;">
+                    <h3>Isolasi Environment Aplikasi</h3>
+                    <p>Tanpa Docker, berbagai runtimes (Java, Node, Python, Postgres) bercampur langsung di dalam satu sistem operasi host, memicu potensi *dependency hell*. Docker mengisolasi tiap runtime ke dalam ruang kontainer yang steril.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide next-stage">
+            <h2><span>12 /</span> Core Docker CLI Operations Matrix</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 35%;">Sintaks Docker CLI</th>
+                            <th style="width: 65%;">Dampak Teknis & Operasional pada Sistem</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>docker ps</code></td><td>Menampilkan daftar semua container yang saat ini sedang aktif/running</td></tr>
+                        <tr><td><code>docker ps -a</code></td><td>Menampilkan semua container di sistem (termasuk yang statusnya stopped/exited)</td></tr>
+                        <tr><td><code>docker images</code></td><td>Melihat daftar Docker Images yang sudah terunduh di lokal storage host</td></tr>
+                        <tr><td><code>docker pull nginx</code></td><td>Mengunduh/download target image dari Docker Hub Registry ke server lokal</td></tr>
+                        <tr><td><code>docker run -d -p 8080:80 nginx</code></td><td>Menjalankan container di background (detached) + mapping port host 8080 ke port container 80</td></tr>
+                        <tr><td><code>docker stop &lt;id&gt;</code></td><td>Menghentikan (graceful shutdown) proses container yang sedang berjalan</td></tr>
+                        <tr><td><code>docker rm &lt;id&gt;</code></td><td>Menghapus container dari sistem lokal storage (container harus di-stop dulu)</td></tr>
+                        <tr><td><code>docker rmi &lt;image&gt;</code></td><td>Menghapus Docker Image dari lokal storage server</td></tr>
+                        <tr><td><code>docker logs &lt;id&gt;</code></td><td>Membuka interface stdout/stderr logs untuk melihat histori error runtime container</td></tr>
+                        <tr><td><code>docker exec -it &lt;id&gt; sh</code></td><td>Membuka tumpangan terminal shell interaktif (tty) masuk ke dalam file system container</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="slide next-stage">
+            <h2><span>13 /</span> Menulis Dockerfile Efisien & Layer Caching</h2>
+            <div class="tech-box" style="padding: 15px; margin-bottom: 15px;">
+                <p><strong>Definisi Teknis:</strong> Dockerfile merupakan skrip otomasi blueprint langkah demi langkah untuk membangun sebuah Docker Image secara berurutan.</p>
+            </div>
+            <div class="tech-grid">
+                <div>
+                    <code-block><span class="code-keyword">FROM</span> node:18-alpine <span class="code-comment"># Base image minimalis</span>
+<span class="code-keyword">WORKDIR</span> /app <span class="code-comment"># Set direktori utama aplikasi</span>
+
+<span class="code-comment"># Strategi Layer Cache: Salin manifes dependensi lebih dulu</span>
+<span class="code-keyword">COPY</span> package*.json ./
+<span class="code-keyword">RUN</span> npm install
+
+<span class="code-keyword">COPY</span> . . <span class="code-comment"># Salin sisa source code setelah dependensi aman</span>
+<span class="code-keyword">EXPOSE</span> 3000
+
+<span class="code-keyword">CMD</span> [ <span class="code-string">"npm"</span>, <span class="code-string">"run"</span>, <span class="code-string">"dev"</span> ] <span class="code-comment"># Runtime execution</span></code-block>
+                </div>
+                <div class="tech-box" style="border-left-color: #38bdf8; margin-bottom: 0;">
+                    <h3>Analisis Mekanisme Layer Caching</h3>
+                    <p>Docker membangun image secara berurutan per baris perintah (layer-by-layer).</p>
+                    <p style="margin-top: 10px; font-size: 15px; color: var(--text-muted);">
+                        Jika baris perintah atau isi berkas di atasnya tidak mengalami perubahan, Docker akan menggunakan <strong>Cache Layer</strong> yang sudah ada tanpa melakukan eksekusi ulang. Dengan menyalin <code>package.json</code> dan menjalankan <code>npm install</code> sebelum menyalin source code utama, proses instalasi dependensi akan di-skip oleh Docker selama tidak ada perubahan library di dalam file manifes. Proses build kompilasi menjadi jauh lebih cepat.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide next-stage">
+            <h2><span>14 /</span> Advanced Docker Deployment CLI Matrix</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kategori Perintah</th>
+                            <th>Sintaks Docker CLI</th>
+                            <th>Dampak Teknis Pada Sistem</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Image Build</strong></td><td><code>docker build -t app:stg -f Dockerfile.prev .</code></td><td>Mengompilasi blueprint Dockerfile menjadi image lokal dengan tag tertentu.</td></tr>
+                        <tr><td><strong>Container Lifecycle</strong></td><td><code>docker run -d -p 3000:3000 --name web app:stg</code></td><td>Instansiasi kontainer di background (detached mode) disertai mapping port host:container.</td></tr>
+                        <tr><td><strong>Process Inspection</strong></td><td><code>docker ps -a</code></td><td>Menampilkan seluruh status kontainer (running, exited, up-time, port assignment).</td></tr>
+                        <tr><td><strong>Active Execution</strong></td><td><code>docker exec -it web /bin/bash</code></td><td>Membuka tumpangan terminal interaktif langsung ke dalam namespaces internal kontainer.</td></tr>
+                        <tr><td><strong>Resource Cleanup</strong></td><td><code>docker system prune -a</code></td><td>Membersihkan seluruh container mati, dangling image, dan network tak terpakai sekaligus.</td></tr>
+                        <tr><td><strong>Data Persistence</strong></td><td><code>docker run -v pgdata:/var/lib/postgresql/data</code></td><td>Mounting volume eksternal persisten guna mengamankan data dari sifat container ephemeral.</td></tr>
+                        <tr><td><strong>Host Binding Network</strong></td><td><code>--host 0.0.0.0</code></td><td>Menginstruksikan internal web server untuk membuka gerbang akses agar dapat dijangkau IP luar.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="slide next-stage">
+            <h2><span>15 /</span> Blueprint & Environment Installation Documentation</h2>
+            <div class="assets-gallery-layout">
+                <div class="assets-menu">
+                    <button class="assets-item-btn active" onclick="switchAsset(0)">
+                        <span>1. Tampilan Awal VirtualBox</span>
+                        <span class="ref-link">Ref: VirtualBox Link</span>
+                    </button>
+                    <button class="assets-item-btn" onclick="switchAsset(1)">
+                        <span>2. Konfigurasi Hardware VBox</span>
+                        <span class="ref-link">Ref: VirtualBox Link</span>
+                    </button>
+                    <button class="assets-item-btn" onclick="switchAsset(2)">
+                        <span>3. Alokasi Resource Hardware</span>
+                        <span class="ref-link">Ref: VirtualBox Link</span>
+                    </button>
+                    <button class="assets-item-btn" onclick="switchAsset(3)">
+                        <span>4. Menjalankan Ubuntu OS</span>
+                        <span class="ref-link">Ref: Ubuntu Server Link</span>
+                    </button>
+                    <button class="assets-item-btn" onclick="switchAsset(4)">
+                        <span>5. Instalasi Docker Environment</span>
+                        <span class="ref-link">Ref: Windows Install Link</span>
+                    </button>
+                    <button class="assets-item-btn" onclick="switchAsset(5)">
+                        <span>6. Setup Docker Windows CLI</span>
+                        <span class="ref-link">Ref: Windows Install Link</span>
+                    </button>
+                    <button class="assets-item-btn" onclick="switchAsset(6)">
+                        <span>7. Integrasi Docker VS Code</span>
+                        <span class="ref-link">Ref: Windows Install Link</span>
+                    </button>
+                    <button class="assets-item-btn" onclick="switchAsset(7)">
+                        <span>8. Integrasi Docker GitBash</span>
+                        <span class="ref-link">Ref: Windows Install Link</span>
+                    </button>
+                    <button class="assets-item-btn" onclick="switchAsset(8)">
+                        <span>9. Port Forwarding Network</span>
+                        <span class="ref-link">Ref: VirtualBox Link</span>
+                    </button>
+                    <button class="assets-item-btn" onclick="switchAsset(9)">
+                        <span>10. Koneksi Database Core</span>
+                        <span class="ref-link">Ref: Local DB Engine</span>
+                    </button>
+                    <button class="assets-item-btn" onclick="switchAsset(10)">
+                        <span>11. Hotel DB Schema Runtime</span>
+                        <span class="ref-link">Ref: Local DB Engine</span>
+                    </button>
+                    <button class="assets-item-btn" onclick="switchAsset(11)">
+                        <span>12. Error Connection DB Log</span>
+                        <span class="ref-link">Ref: Troubleshooting Log</span>
+                    </button>
+                    <button class="assets-item-btn" onclick="switchAsset(12)">
+                        <span>13. Build Windows Environment</span>
+                        <span class="ref-link">Ref: Windows OS Layer</span>
+                    </button>
+                    <button class="assets-item-btn" onclick="switchAsset(13)">
+                        <span>14. Build Quarkus Framework</span>
+                        <span class="ref-link">Ref: Quarkus Engine</span>
+                    </button>
+                    <button class="assets-item-btn" onclick="switchAsset(14)">
+                        <span>15. React Vite Config Layer</span>
+                        <span class="ref-link">Ref: Frontend Layer</span>
+                    </button>
+                </div>
+
+                <div class="assets-viewer">
+                    <img class="active" src="../assets/tampilan-awal-vbox.png" alt="Tampilan Awal VBox">
+                    <img src="../assets/config-vbox.png" alt="Config VBox">
+                    <img src="../assets/setup-vbox-hardware.png" alt="Setup VBox Hardware">
+                    <img src="../assets/jalanin-ubuntu.png" alt="Jalanin Ubuntu">
+                    <img src="../assets/docker-windows.png" alt="Docker Windows">
+                    <img src="../assets/build-windows.png" alt="Build Windows">
+                    <img src="../assets/docker-vscode.png" alt="Docker VS Code">
+                    <img src="../assets/docker-gitbash.png" alt="Docker GitBash">
+                    <img src="../assets/port-forwading.png" alt="Port Forwarding">
+                    <img src="../assets/konek-db.png" alt="Konek DB">
+                    <img src="../assets/hoteldb.png" alt="Hotel DB">
+                    <img src="../assets/error-konek-db.png" alt="Error Konek DB">
+                    <img src="../assets/build-windows.png" alt="Build Windows 2">
+                    <img src="../assets/build-quarkus.png" alt="Build Quarkus">
+                    <img src="../assets/react-vite-config.png" alt="React Vite Config">
+                </div>
+            </div>
+        </div>
+
+        <div class="slide next-stage slide-title-page">
+            <h1>Terima Kasih</h1>
+            <div class="subtitle" style="color: var(--accent-green); font-family: 'JetBrains Mono', monospace; margin-top: 10px;">
+                End of Technical Presentation
+            </div>
+            <div class="meta-text" style="margin-top: 30px; color: #64748b;">
+                Iran Situmorang | DevOps Journey 2026
+            </div>
+        </div>
+
+        <div class="footer-controls">
+            <div class="pagination-dots" id="paginationDots"></div>
+            
+            <div class="nav-buttons">
+                <button class="btn" id="prevBtn">PREV</button>
+                <div class="slide-counter" id="counter">1 / 17</div>
+                <button class="btn" id="nextBtn">NEXT</button>
+            </div>
+        </div>
+
+        <div class="progress-bar" id="progress"></div>
+
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const counter = document.getElementById('counter');
+        const progressBar = document.getElementById('progress');
+        const paginationDots = document.getElementById('paginationDots');
+        
+        let currentSlide = 0;
+        let isAnimating = false;
+        const totalSlides = slides.length;
+
+        const slideTopics = [
+            "Title Page",
+            "DevOps Learning Path Matrix",
+            "Strategi & Jadwal Eksplorasi",
+            "Agenda Belajar Minggu Ini",
+            "Setup Environment VirtualBox",
+            "Linux System Admin Intro",
+            "Linux Directory Structure",
+            "Essential Linux Commands",
+            "SSH Architecture & Network",
+            "Isolasi: VM vs Container",
+            "VM vs Docker Decision-Production",
+            "Docker Runtime Engine Intro",
+            "Core Docker CLI Operations",
+            "Optimasi Dockerfile Caching",
+            "Advanced Deployment CLI Matrix",
+            "Installation Assets Documentation",
+            "Closing Page - Terima Kasih"
+        ];
+
+        function initPagination() {
+            paginationDots.innerHTML = '';
+            for (let i = 0; i < totalSlides; i++) {
+                const container = document.createElement('div');
+                container.classList.add('page-btn-container');
+                container.setAttribute('data-tooltip', slideTopics[i] || `Slide ${i + 1}`);
+
+                const btn = document.createElement('button');
+                btn.classList.add('page-num-btn');
+                btn.textContent = String(i + 1).padStart(2, '0');
+                
+                btn.addEventListener('click', () => {
+                    if (i !== currentSlide) {
+                        goToSlide(i);
+                    }
+                });
+                
+                container.appendChild(btn);
+                paginationDots.appendChild(container);
+            }
+        }
+
+        function goToSlide(nextIndex) {
+            if (isAnimating) return;
+            isAnimating = true;
+
+            const direction = nextIndex > currentSlide ? 'next' : 'prev';
+            const oldSlide = slides[currentSlide];
+            const newSlide = slides[nextIndex];
+
+            slides.forEach((slide) => {
+                slide.className = 'slide';
+            });
+
+            if (direction === 'next') {
+                oldSlide.classList.add('exit-next');
+                newSlide.className = 'slide next-stage';
+            } else {
+                oldSlide.classList.add('exit-prev');
+                newSlide.className = 'slide prev-stage';
+            }
+
+            newSlide.offsetWidth;
+            newSlide.classList.add('active');
+            currentSlide = nextIndex;
+
+            updateUI();
+
+            setTimeout(() => {
+                isAnimating = false;
+                slides.forEach((slide, idx) => {
+                    if (idx !== currentSlide) {
+                        slide.className = idx > currentSlide ? 'slide next-stage' : 'slide prev-stage';
+                    }
+                });
+            }, 800);
+        }
+
+        function updateUI() {
+            const containers = paginationDots.querySelectorAll('.page-btn-container');
+            containers.forEach((container, index) => {
+                if (index === currentSlide) {
+                    container.classList.add('active');
+                } else {
+                    container.classList.remove('active');
+                }
+            });
+
+            counter.textContent = `${currentSlide + 1} / ${totalSlides}`;
+            const progressPercent = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+        }
+
+        /* --- INTERAKSI BARU: SWITCH GAMBAR ASSETS DI DALAM SLIDE 16 --- */
+        window.switchAsset = function(index) {
+            const buttons = document.querySelectorAll('.assets-item-btn');
+            const images = document.querySelectorAll('.assets-viewer img');
+            
+            buttons.forEach(btn => btn.classList.remove('active'));
+            images.forEach(img => img.classList.remove('active'));
+            
+            buttons[index].classList.add('active');
+            images[index].classList.add('active');
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentSlide < totalSlides - 1) goToSlide(currentSlide + 1);
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentSlide > 0) goToSlide(currentSlide - 1);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                if (currentSlide < totalSlides - 1) goToSlide(currentSlide + 1);
+            } else if (e.key === 'ArrowLeft') {
+                if (currentSlide > 0) goToSlide(currentSlide - 1);
+            }
+        });
+
+        initPagination();
+        updateUI();
+    </script>
+</body>
+</html>
