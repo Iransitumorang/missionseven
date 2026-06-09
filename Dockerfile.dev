@@ -1,19 +1,11 @@
-# Gunakan image NodeJS versi 18 berbasis Alpine Linux. pilih Alpine karena ukurannya yang kecil, sehingga lebih ringan untuk pengembangan.
-FROM node:18-alpine 
-
-#  Set working directory di dalam container ke /app. Ini adalah tempat di mana aplikasi kita akan dijalankan.
+FROM node:18-alpine AS build
 WORKDIR /app
-
-# Salin file package.json dan package-lock.json (jika ada) ke dalam container. Ini diperlukan untuk menginstal dependensi aplikasi.
 COPY package*.json ./
-
 RUN npm install
-
-# Copy seluruh project ke dalam container. Ini termasuk semua file sumber, konfigurasi, dan aset yang diperlukan untuk menjalankan aplikasi.
 COPY . .
+RUN npm run build
 
-# Jalankan perintah npm run dev untuk memulai aplikasi dalam mode pengembangan. Ini biasanya akan menjalankan server pengembangan yang mendukung hot-reloading, sehingga perubahan kode dapat langsung terlihat tanpa perlu membangun ulang aplikasi.
-CMD [ "npm", "run", "dev" ]
-
-# Kenapa package.json dicopy dulu? Karena cache Docker. Docker build layer per layer.
-# Jika kita copy semua file sekaligus, maka setiap perubahan pada file apapun akan membuat Docker mengulang proses npm install, yang memakan waktu. Dengan menyalin package.json terlebih dahulu, Docker hanya akan mengulang proses npm install jika ada perubahan pada package.json, bukan pada file lain. Ini membuat proses build lebih cepat selama pengembangan.
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

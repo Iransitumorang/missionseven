@@ -306,8 +306,14 @@
             color: #38bdf8;
             text-decoration: underline;
         }
+        
         .assets-item-btn.active .ref-link {
             color: #0369a1;
+        }
+
+        /* Highlight khusus untuk bukti running BE & FE */
+        .assets-item-btn.status-success {
+            border-left: 3px solid #22c55e;
         }
 
         .assets-viewer {
@@ -555,7 +561,7 @@
                 <div class="tech-box" style="border-left-color: var(--text-main);">
                     <h3>Strategi Eksekusi Task</h3>
                     <ul>
-                        <li><strong>Hands-on Environment:</strong> Mengurangi porsi teori abstrak; implementasi langsung pada local host server Linux Ubuntu via hypervisor.</li>
+                        <li><strong>Hands-on Environment:</strong> Mengurangi porsi teori abstrak; implementation langsung pada local host server Linux Ubuntu via hypervisor.</li>
                         <li><strong>Error Logging & Documentation:</strong> Mencatat seluruh state error (seperti connection timeout, port conflict) secara sistematis untuk basis troubleshooting.</li>
                         <li><strong>Checkpoint Review:</strong> Mengadakan sinkronisasi teknis mingguan bersama mentor guna memvalidasi efisiensi konfigurasi environment.</li>
                     </ul>
@@ -733,7 +739,7 @@
                 <div class="tech-box" style="border-left-color: #38bdf8;">
                     <h3>Pakai VM ketika:</h3>
                     <ul style="font-size: 14px;">
-                        <li>Butuh isolasi penuh sampai level OS dan kernel.</li>
+                        <li>Butuh isolasi penuh sampai level OS and kernel.</li>
                         <li>Menjalankan OS berbeda dalam satu host (misalnya Linux dan Windows).</li>
                         <li>Menjalankan aplikasi legacy yang sulit di-containerize.</li>
                         <li>Membutuhkan driver, kernel module, atau konfigurasi OS khusus.</li>
@@ -930,6 +936,19 @@
                         <span>15. React Vite Config Layer</span>
                         <span class="ref-link">Ref: Frontend Layer</span>
                     </button>
+                    
+                    <button class="assets-item-btn status-success" onclick="switchAsset(15)">
+                        <span>16. [BUKTI] Quarkus BE Active</span>
+                        <span class="ref-link" style="color: #22c55e;">Status: Running Ok</span>
+                    </button>
+                    <button class="assets-item-btn status-success" onclick="switchAsset(16)">
+                        <span>17. [BUKTI] React Frontend Staging</span>
+                        <span class="ref-link" style="color: #22c55e;">Status: Running Ok</span>
+                    </button>
+                    <button class="assets-item-btn status-success" onclick="switchAsset(17)">
+                        <span>18. [BUKTI] React Frontend Dev</span>
+                        <span class="ref-link" style="color: #22c55e;">Status: Running Ok</span>
+                    </button>
                 </div>
 
                 <div class="assets-viewer">
@@ -948,6 +967,10 @@
                     <img src="../assets/build-windows.png" alt="Build Windows 2">
                     <img src="../assets/build-quarkus.png" alt="Build Quarkus">
                     <img src="../assets/react-vite-config.png" alt="React Vite Config">
+                    
+                    <img src="../assets/hello-quarkus.png" alt="Hello Quarkus BE running">
+                    <img src="../assets/react-stg.png" alt="React Frontend Staging running">
+                    <img src="../assets/react-dev.png" alt="React Frontend Dev running">
                 </div>
             </div>
         </div>
@@ -1081,7 +1104,6 @@
             progressBar.style.width = `${progressPercent}%`;
         }
 
-        /* --- INTERAKSI BARU: SWITCH GAMBAR ASSETS DI DALAM SLIDE 16 --- */
         window.switchAsset = function(index) {
             const buttons = document.querySelectorAll('.assets-item-btn');
             const images = document.querySelectorAll('.assets-viewer img');
