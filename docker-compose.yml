@@ -1,0 +1,8 @@
+services:
+  missionseven:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: missionseven
+    ports:
+      - "8092:80"
