@@ -47,4 +47,3 @@ jobs:
             -n $NAMESPACE
 
           kubectl rollout status deployment/$DEPLOYMENT_NAME -n $NAMESPACE
-
