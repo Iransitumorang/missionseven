@@ -44,8 +44,9 @@ function Header() {
               />
               <ul className="dropdown-menu dropdown-menu-end">
                 <li><Link className="dropdown-item" to="/profil">Profil Saya</Link></li>
-                <li><Link className="dropdown-item" to="/kelas">Kelas Saya</Link></li>
-                <li><Link className="dropdown-item" to="/pesanan">Pesanan Saya</Link></li>
+                <li><Link className="dropdown-item" to="../pages/devopssatu">Devops Satu</Link></li>
+                <li><Link className="dropdown-item" to="../pages/devopsdua">Devops Dua</Link></li>
+                <li><Link className="dropdown-item" to="../pages/alurdeploy">Alur Deploy K8s</Link></li>
                 <li><hr className="dropdown-divider" /></li>
                 <li><button className="dropdown-item" onClick={handleLogout}>Keluar</button></li>
               </ul>

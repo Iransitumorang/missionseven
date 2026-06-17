@@ -46,7 +46,16 @@
             box-shadow: 0 0 60px -15px rgba(222, 255, 154, 0.15), 0 25px 50px -12px rgba(0, 0, 0, 0.8);
             border: 1px solid rgba(222, 255, 154, 0.08);
             overflow: hidden;
-            perspective: 1600px;
+        }
+
+        #cosmicCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
         }
 
         .slide {
@@ -63,31 +72,35 @@
             backdrop-filter: blur(10px);
             opacity: 0;
             pointer-events: none;
-            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease;
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease, filter 0.6s ease;
             z-index: 2;
         }
 
         .slide.next-stage {
             opacity: 0;
-            transform: translateY(30px) scale(0.98);
+            transform: translateX(40px) scale(0.98);
+            filter: blur(4px);
         }
 
         .slide.prev-stage {
             opacity: 0;
-            transform: translateY(-30px) scale(0.98);
+            transform: translateX(-40px) scale(0.98);
+            filter: blur(4px);
         }
 
         .slide.active {
             opacity: 1;
-            transform: translateY(0) scale(1);
+            transform: translateX(0) scale(1);
+            filter: blur(0px);
             pointer-events: auto;
-            z-index: 10;
+            z-index: 5;
         }
 
         .slide-title-page {
             justify-content: center;
             align-items: center;
             text-align: center;
+            background: rgba(4, 7, 18, 0.7) !important;
         }
 
         h1 {
@@ -177,12 +190,95 @@
 
         td {
             padding: 10px 12px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 256, 0.06);
             color: #e2e8f0;
         }
 
         tr:nth-child(even) {
             background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .spotlight-container {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 24px;
+            height: 460px;
+            background: rgba(13, 19, 34, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .spotlight-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow-y: auto;
+            max-height: 100%;
+            padding-right: 8px;
+        }
+
+        .spotlight-sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .spotlight-sidebar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.01);
+        }
+        .spotlight-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(222, 255, 154, 0.15);
+            border-radius: 3px;
+        }
+
+        .spotlight-item {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.4;
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 6px;
+            color: #cbd5e1;
+            cursor: pointer;
+            word-break: break-all;
+            display: block;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .spotlight-item:hover {
+            background: rgba(222, 255, 154, 0.05);
+            border-color: rgba(222, 255, 154, 0.3);
+            color: #fff;
+        }
+
+        .spotlight-item.active {
+            background: rgba(222, 255, 154, 0.1);
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        .spotlight-main {
+            background: #020406;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spotlight-main img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            opacity: 1;
+            transition: opacity 0.2s ease-in-out;
+        }
+
+        .spotlight-main img.fade-out {
+            opacity: 0;
         }
 
         .footer-controls {
@@ -198,26 +294,71 @@
 
         .pagination-dots {
             display: flex;
-            gap: 6px;
+            gap: 4px;
         }
 
+        /* --- ADD FEATURE: DYNAMIC HOVER TOOLTIP SYSTEM --- */
         .page-btn-container {
             position: relative;
+        }
+
+        .page-btn-container::after {
+            content: attr(data-title);
+            position: absolute;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%) translateY(5px);
+            background: #090e1a;
+            border: 1px solid var(--accent-green);
+            color: #ffffff;
+            padding: 6px 12px;
+            font-size: 11px;
+            font-family: 'JetBrains Mono', monospace;
+            border-radius: 4px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.2s ease;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .page-btn-container::before {
+            content: '';
+            position: absolute;
+            bottom: 26px;
+            left: 50%;
+            transform: translateX(-50%) translateY(5px);
+            border-width: 6px 6px 0;
+            border-style: solid;
+            border-color: var(--accent-green) transparent;
+            display: block;
+            width: 0;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.2s ease;
+            z-index: 1000;
+        }
+
+        .page-btn-container:hover::after,
+        .page-btn-container:hover::before {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
         }
 
         .page-num-btn {
             background-color: rgba(13, 19, 34, 0.9);
             border: 1px solid rgba(255, 255, 255, 0.08);
             color: var(--text-muted);
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             display: flex;
             justify-content: center;
             align-items: center;
             border-radius: 3px;
             cursor: pointer;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: bold;
             transition: all 0.2s ease;
         }
@@ -294,7 +435,7 @@
 
         .closing-item {
             background: rgba(13, 19, 34, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 256, 0.06);
             padding: 14px 20px;
             border-radius: 4px;
             display: flex;
@@ -309,15 +450,57 @@
 
         ul { list-style-position: inside; }
         li { margin-bottom: 6px; }
+
+        /* --- ADD FEATURE: SYSTEM EXPORT TO PRINT / PDF ENGINE --- */
+        @media print {
+            @page {
+                size: 1280px 720px;
+                margin: 0;
+            }
+            body, html {
+                background: #040712 !important;
+                overflow: visible !important;
+                height: auto !important;
+            }
+            .presentation-container {
+                width: 1280px !important;
+                height: auto !important;
+                box-shadow: none !important;
+                border: none !important;
+                overflow: visible !important;
+            }
+            #cosmicCanvas, .footer-controls, .progress-bar {
+                display: none !important;
+            }
+            .slide {
+                position: relative !important;
+                display: flex !important;
+                opacity: 1 !important;
+                transform: none !important;
+                filter: none !important;
+                pointer-events: auto !important;
+                width: 1280px !important;
+                height: 720px !important;
+                page-break-after: always !important;
+                break-after: page !important;
+                background: #060913 !important;
+            }
+            .spotlight-sidebar {
+                overflow-y: visible !important;
+                max-height: none !important;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <div class="presentation-container">
+    <div class="presentation-container" id="presentationContainer">
+        <canvas id="cosmicCanvas"></canvas>
         
         <div class="slide slide-title-page active">
             <div style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--accent-green); letter-spacing: 2px; margin-bottom: 15px;">ENTERPRISE ARCHITECTURE FRAMEWORK</div>
-            <h1>Container System & Container Orchestration</h1>
+            <h1 style="font-family: 'JetBrains Mono', monospace; font-size: 16px; color: var(--accent-green); letter-spacing: 2px; margin-bottom: 15px;">Orkestrasi & Compose, Kubernetes, CI/CD & Automation</h1>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--accent-green); letter-spacing: 2px; margin-bottom: 15px;">Iran Situmorang</div>
             <div style="font-size: 18px; color: var(--text-muted); margin-top: 10px;">Deep Dive: Docker Compose, Kubernetes, & Automated Pipeline</div>
         </div>
 
@@ -360,7 +543,7 @@
                     <p>Tanpa Compose, operasional kluster mewajibkan eksekusi <code>docker run</code> berkali-kali secara manual, setup network bridge terisolasi, serta mounting volume satu per satu yang rentan terjadi kesalahan konfigurasi.</p>
                 </div>
                 <div class="tech-box" style="margin-bottom: 0; border-left-color: #38bdf8;">
-                    <h3>Skenario Praktis (Compose)</h3>
+                    <h3>Skenario Practical (Compose)</h3>
                     <p>Seluruh spesifikasi infrastruktur dideklarasikan secara terpusat dalam berkas <code>docker-compose.yml</code>. Cukup satu instruksi command untuk mengendalikan seluruh siklus hidup service.</p>
                 </div>
             </div>
@@ -498,7 +681,7 @@
             <div class="tech-grid">
                 <div class="tech-box" style="margin-bottom: 0;">
                     <h3>Pod: Unit Terkecil</h3>
-                    <p>Pod membungkus satu atau beberapa container aplikasi. Kontainer dalam satu Pod berbagi network IP, storage space, dan port range yang sama.</p>
+                    <p>Pod membungkus satu atau several container aplikasi. Kontainer dalam satu Pod berbagi network IP, storage space, dan port range yang sama.</p>
                     <p style="margin-top: 10px; font-size: 14px; color: var(--text-muted);">Umumnya diimplementasikan dengan rasio: 1 Pod = 1 Container.</p>
                 </div>
                 <div class="tech-box" style="margin-bottom: 0; border-left-color: #06b6d4;">
@@ -616,7 +799,7 @@
                     <code-block style="font-size: 11px;">kubectl logs -f [nama-pod]</code-block>
                 </div>
                 <div class="tech-box" style="margin-bottom: 0; border-left-color: #ec4899;">
-                    <h3>Skenario Kasus Khusus</h3>
+                    <h3>Skenario Kasus Kasus Khusus</h3>
                     <p>Membaca log dari pod yang mengalami crash-loop / restart otomatis (membaca state log sebelumnya):</p>
                     <code-block style="font-size: 11px; margin-bottom: 10px;">kubectl logs [pod] --previous</code-block>
                     <p>Spesifik log jika pod membawa multi-container:</p>
@@ -663,7 +846,7 @@
                 <div class="tech-box" style="margin-bottom: 0; border-left-color: #ef4444;">
                     <h3>Emergency Rollback</h3>
                     <p>Jika image baru bermasalah di production, eksekusi perintah pembatalan instan berikut untuk mengembalikan kluster ke versi stabil sebelumnya:</p>
-                    <code-block style="font-size: 11px; margin-top: 5px;">kubectl rollout undo deployment frontend</code-block>
+                    <code-block style="font-size: 11px;">kubectl rollout undo deployment frontend</code-block>
                 </div>
             </div>
         </div>
@@ -672,7 +855,7 @@
             <h2><span>16 /</span> Isolasi Lingkungan via Namespace</h2>
             <div class="tech-box">
                 <h3>Definisi Virtual Cluster</h3>
-                <p>Namespace berfungsi memisahkan satu kluster fisik menjadi beberapa wilayah logical terisolasi. una untuk memisahkan siklus kerja development tanpa risiko tabrakan resource konfigurasi.</p>
+                <p>Namespace berfungsi memisahkan satu kluster fisik menjadi beberapa wilayah logical terisolasi. Guna untuk memisahkan siklus kerja development tanpa risiko tabrakan resource konfigurasi.</p>
             </div>
             <div class="tech-grid">
                 <div class="tech-box" style="margin-bottom: 0;">
@@ -723,7 +906,45 @@
         </div>
 
         <div class="slide next-stage">
-            <h2><span>18 /</span> Matriks Pencapaian & Status Proyek</h2>
+            <h2><span>18 /</span> Bukti Foto Dokumentasi Pengerjaan</h2>
+            <p style="color: var(--text-muted); margin-bottom: 15px; font-size: 15px;">Pilih log atau arsitektur di sidebar untuk memproyeksikan visual dokumentasi penuh ke area Spotlight:</p>
+            
+            <div class="spotlight-container">
+                <div class="spotlight-sidebar" id="spotlightSidebar">
+                    <div class="spotlight-item active" data-img="../assets/devops2/CD-error.png">CD-error.png</div>
+                    <div class="spotlight-item" data-img="../assets/devops2/CI-CD-github.png">CI-CD-github.png</div>
+                    <div class="spotlight-item" data-img="../assets/devops2/CI.png">CI.png</div>
+                    <div class="spotlight-item" data-img="../assets/devops2/curl.png">curl.png</div>
+                    <div class="spotlight-item" data-img="../assets/devops2/delete-pods.png">delete-pods.png</div>
+                    <div class="spotlight-item" data-img="../assets/devops2/deployment-yaml.png">deployment-yaml.png</div>
+                    <div class="spotlight-item" data-img="../assets/devops2/docker-compose.png">docker-compose.png</div>
+                    <div class="spotlight-item" data-img="../assets/devops2/docker-compose2.png">docker-compose2.png</div>
+                    <div class="spotlight-item" data-img="../assets/devops2/docker-hub.png">docker-hub.png</div>
+                    <div class="spotlight-item" data-img="../assets/devops2/first-docker-hub.png">first-docker-hub.png</div>
+                    <div class="spotlight-item" data-img="../assets/devops2/fullstack.png">fullstack.png</div>
+                    <div class="spotlight-item" data-img="../assets/devops2/hotel.png">hotel.png</div>
+                    <div class="spotlight-item" data-img="../assets/devops2/https-berhasil.png">https-berhasil.png</div>
+                    <div class="spotlight-item" data-img="../assets/devops2/getpods.png">getpods.png</div>
+                    <div class="spotlight-item" data-img="../assets/devops2/getsvc.png">getsvc.png</div>
+                    <div class="spotlight-item" data-img="../assets/devops2/inggress-yaml.png">inggress-yaml.png</div>
+                    <div class="spotlight-item" data-img="../assets/devops2/inggress2.png">inggress2.png</div>
+                    <div class="spotlight-item" data-img="../assets/devops2/ingress.png">ingress.png</div>
+                    <div class="spotlight-item" data-img="../assets/devops2/ip-docker-compose.png">ip-docker-compose.png</div>
+                    <div class="spotlight-item" data-img="../assets/devops2/namespace.png">namespace.png</div>
+                    <div class="spotlight-item" data-img="../assets/devops2/not-private.png">not-private.png</div>
+                    <div class="spotlight-item" data-img="../assets/devops2/port-forward.png">port-forward.png</div>
+                    <div class="spotlight-item" data-img="../assets/devops2/projek-docker-compose.png">projek-docker-compose.png</div>
+                    <div class="spotlight-item" data-img="../assets/devops2/setimage.png">setimage.png</div>
+                </div>
+                
+                <div class="spotlight-main">
+                    <img id="spotlightTarget" src="../assets/devops2/CD-error.png" alt="Spotlight View Document">
+                </div>
+            </div>
+        </div>
+
+        <div class="slide next-stage">
+            <h2><span>19 /</span> Matriks Pencapaian & Status Proyek</h2>
             <p style="color: var(--text-muted); margin-bottom: 15px; font-size: 15px;">Berikut adalah rekapitulasi status check implementasi infrastruktur DevOps nyata yang telah berhasil dieksekusi dan dikonfigurasi:</p>
             <div class="closing-grid">
                 <div class="closing-item"><span>Docker Compose build</span><span class="status-check">✅</span></div>
@@ -742,6 +963,7 @@
         </div>
 
         <div class="slide next-stage slide-title-page">
+            <h2><span>Fin /</span> Selesai</h2>
             <h1>Selesai & Terima Kasih</h1>
             <div style="font-family: 'JetBrains Mono', monospace; font-size: 16px; color: var(--accent-green); margin-top: 10px;">Infrastruktur Berhasil Di-scale & Terstandardisasi</div>
             <div style="font-size: 14px; color: #64748b; margin-top: 40px;">Iran | DevOps Learning Track Project</div>
@@ -751,7 +973,7 @@
             <div class="pagination-dots" id="paginationDots"></div>
             <div class="nav-buttons">
                 <button class="btn" id="prevBtn">PREV</button>
-                <div class="slide-counter" id="counter">1 / 20</div>
+                <div class="slide-counter" id="counter">1 / 21</div>
                 <button class="btn" id="nextBtn">NEXT</button>
             </div>
         </div>
@@ -760,6 +982,7 @@
     </div>
 
     <script>
+        const container = document.getElementById('presentationContainer');
         const slides = document.querySelectorAll('.slide');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
@@ -771,11 +994,101 @@
         let isAnimating = false;
         const totalSlides = slides.length;
 
+        // --- CORE ANIMASI CANVAS (COSMIC NEBULA BUBBLE ENGINE) ---
+        const canvas = document.getElementById('cosmicCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            const rect = container.getBoundingClientRect();
+            canvas.width = rect.width || 1280;
+            canvas.height = rect.height || 720;
+        }
+        
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const particles = [];
+        const particleCount = 45;
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push({
+                x: Math.random() * 1280,
+                y: Math.random() * 720,
+                radius: Math.random() * 6 + 1.5,
+                speedX: (Math.random() - 0.5) * 0.6,
+                speedY: (Math.random() - 0.5) * 0.6,
+                alpha: Math.random() * 0.25 + 0.08
+            });
+        }
+
+        function drawCosmicParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            for (let i = 0; i < particles.length; i++) {
+                let p = particles[i];
+                
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2, false);
+                ctx.fillStyle = `rgba(222, 255, 154, ${p.alpha})`;
+                ctx.fill();
+
+                p.x += p.speedX;
+                p.y += p.speedY;
+
+                if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
+            }
+
+            requestAnimationFrame(drawCosmicParticles);
+        }
+        
+        requestAnimationFrame(drawCosmicParticles);
+
+        // --- ENGINE UNTUK INTERACTIVE SPOTLIGHT LIST CLICK ---
+        const listItems = document.querySelectorAll('.spotlight-item');
+        const targetImg = document.getElementById('spotlightTarget');
+
+        listItems.forEach(item => {
+            item.addEventListener('click', function() {
+                if (this.classList.contains('active')) return;
+
+                document.querySelector('.spotlight-item.active').classList.remove('active');
+                this.classList.add('active');
+
+                targetImg.classList.add('fade-out');
+                setTimeout(() => {
+                    targetImg.src = this.getAttribute('data-img');
+                    targetImg.classList.remove('fade-out');
+                }, 180);
+            });
+        });
+
+        // --- EXTRACT TOOLTIP TITLE FROM SLIDES DYNAMICALLY ---
+        function getSlideTitle(slideIndex) {
+            const slide = slides[slideIndex];
+            if (slideIndex === 0) return "Cover / Judul";
+            
+            const h2 = slide.querySelector('h2');
+            if (h2) {
+                // Bersihkan teks nomor seperti '01 / '
+                return h2.textContent.replace(/^\s*\d+\s*\/\s*/, '').trim();
+            }
+            
+            const h1 = slide.querySelector('h1');
+            if (h1) return h1.textContent.trim();
+            
+            return `Slide ${slideIndex + 1}`;
+        }
+
         function initPagination() {
             paginationDots.innerHTML = '';
             for (let i = 0; i < totalSlides; i++) {
-                const container = document.createElement('div');
-                container.classList.add('page-btn-container');
+                const containerDot = document.createElement('div');
+                containerDot.classList.add('page-btn-container');
+                
+                // Ambil judul slide buat di-set sebagai isi text Tooltip
+                const slideTitle = getSlideTitle(i);
+                containerDot.setAttribute('data-title', slideTitle);
 
                 const btn = document.createElement('button');
                 btn.classList.add('page-num-btn');
@@ -785,8 +1098,8 @@
                     if (i !== currentSlide) goToSlide(i);
                 });
                 
-                container.appendChild(btn);
-                paginationDots.appendChild(container);
+                containerDot.appendChild(btn);
+                paginationDots.appendChild(containerDot);
             }
         }
 
@@ -821,14 +1134,14 @@
                         slide.className = idx > currentSlide ? 'slide next-stage' : 'slide prev-stage';
                     }
                 });
-            }, 500);
+            }, 600);
         }
 
         function updateUI() {
             const containers = paginationDots.querySelectorAll('.page-btn-container');
-            containers.forEach((container, index) => {
-                if (index === currentSlide) container.classList.add('active');
-                else container.classList.remove('active');
+            containers.forEach((containerDot, index) => {
+                if (index === currentSlide) containerDot.classList.add('active');
+                else containerDot.classList.remove('active');
             });
 
             counter.textContent = `${currentSlide + 1} / ${totalSlides}`;

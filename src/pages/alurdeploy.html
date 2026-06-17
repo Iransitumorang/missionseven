@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kubernetes Deployment Guide</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Inter, Arial, sans-serif;
+      background: #0f172a;
+      color: #e5e7eb;
+      line-height: 1.7;
+    }
+
+    header {
+      padding: 70px 24px;
+      text-align: center;
+      background:
+        radial-gradient(circle at top left, #2563eb, transparent 30%),
+        linear-gradient(135deg, #0f172a, #111827);
+    }
+
+    header h1 {
+      font-size: clamp(32px, 5vw, 58px);
+      margin-bottom: 16px;
+      color: #ffffff;
+    }
+
+    header p {
+      max-width: 760px;
+      margin: auto;
+      color: #cbd5e1;
+      font-size: 18px;
+    }
+
+    .container {
+      width: min(1100px, 92%);
+      margin: 40px auto;
+      display: grid;
+      gap: 24px;
+    }
+
+    .card {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 22px;
+      padding: 28px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+    }
+
+    .card h2 {
+      color: #60a5fa;
+      margin-bottom: 14px;
+      font-size: 26px;
+    }
+
+    .card p {
+      color: #cbd5e1;
+      margin-bottom: 14px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(37, 99, 235, 0.18);
+      color: #93c5fd;
+      font-size: 13px;
+      margin-bottom: 14px;
+      border: 1px solid rgba(147, 197, 253, 0.25);
+    }
+
+    .code-box {
+      position: relative;
+      margin-top: 16px;
+      background: #020617;
+      border: 1px solid #1e293b;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      background: #111827;
+      border-bottom: 1px solid #1e293b;
+      color: #94a3b8;
+      font-size: 13px;
+    }
+
+    pre {
+      overflow-x: auto;
+      padding: 18px;
+      color: #d1d5db;
+      font-size: 14px;
+    }
+
+    code {
+      font-family: "Fira Code", Consolas, monospace;
+    }
+
+    .copy-btn {
+      cursor: pointer;
+      border: none;
+      border-radius: 10px;
+      padding: 7px 12px;
+      background: #2563eb;
+      color: white;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+
+    .copy-btn:hover {
+      background: #1d4ed8;
+      transform: translateY(-1px);
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .flow-item {
+      background: #111827;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 18px;
+      text-align: center;
+      color: #bfdbfe;
+      font-weight: 700;
+    }
+
+    .note {
+      padding: 18px;
+      border-left: 4px solid #3b82f6;
+      background: rgba(59, 130, 246, 0.1);
+      border-radius: 12px;
+      color: #dbeafe;
+      margin-top: 16px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 36px 20px;
+      color: #94a3b8;
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        padding: 22px;
+      }
+
+      pre {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Kubernetes Deployment Guide</h1>
+    <p>
+      Panduan step-by-step deploy aplikasi ke Kubernetes dari manual deployment
+      sampai CI/CD. Dibuat untuk developer yang ingin paham alurnya, bukan cuma
+      copy-paste YAML lalu berdoa. DevOps bukan dukun, bro.
+    </p>
+  </header>
+
+  <main class="container">
+
+    <section class="card">
+      <span class="badge">Step 1</span>
+      <h2>Cek Koneksi Cluster</h2>
+      <p>
+        Pastikan terminal sudah terhubung ke Kubernetes cluster yang benar.
+      </p>
+
+      <div class="code-box">
+        <div class="code-header">
+          <span>terminal</span>
+          <button class="copy-btn">Copy</button>
+        </div>
+        <pre><code>kubectl cluster-info
+kubectl get nodes</code></pre>
+      </div>
+
+      <div class="note">
+        Kalau node muncul, berarti koneksi aman. Kalau error, biasanya kubeconfig belum benar.
+      </div>
+    </section>
+
+    <section class="card">
+      <span class="badge">Step 2</span>
+      <h2>Buat Namespace</h2>
+      <p>
+        Namespace digunakan untuk memisahkan environment atau aplikasi.
+      </p>
+
+      <div class="code-box">
+        <div class="code-header">
+          <span>terminal</span>
+          <button class="copy-btn">Copy</button>
+        </div>
+        <pre><code>kubectl create namespace my-app
+kubectl get ns</code></pre>
+      </div>
+    </section>
+
+    <section class="card">
+      <span class="badge">Step 3</span>
+      <h2>Buat Deployment</h2>
+      <p>
+        Deployment bertugas menjaga pod tetap hidup dan mengatur update aplikasi.
+      </p>
+
+      <div class="code-box">
+        <div class="code-header">
+          <span>k8s/deployment.yaml</span>
+          <button class="copy-btn">Copy</button>
+        </div>
+        <pre><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: my-app
+spec:
+  replicas: 2
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app: frontend
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: registry.example.com/my-app/frontend:v1.0.0
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"</code></pre>
+      </div>
+
+      <div class="code-box">
+        <div class="code-header">
+          <span>terminal</span>
+          <button class="copy-btn">Copy</button>
+        </div>
+        <pre><code>kubectl apply -f k8s/deployment.yaml
+kubectl get pods -n my-app
+kubectl get deploy -n my-app</code></pre>
+      </div>
+    </section>
+
+    <section class="card">
+      <span class="badge">Step 4</span>
+      <h2>Buat Service</h2>
+      <p>
+        Service memberi alamat stabil untuk pod. Pod boleh ganti IP, service tetap jadi pintu masuk.
+      </p>
+
+      <div class="code-box">
+        <div class="code-header">
+          <span>k8s/service.yaml</span>
+          <button class="copy-btn">Copy</button>
+        </div>
+        <pre><code>apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+  namespace: my-app
+spec:
+  type: ClusterIP
+  selector:
+    app: frontend
+  ports:
+    - port: 80
+      targetPort: 80</code></pre>
+      </div>
+
+      <div class="code-box">
+        <div class="code-header">
+          <span>terminal</span>
+          <button class="copy-btn">Copy</button>
+        </div>
+        <pre><code>kubectl apply -f k8s/service.yaml
+kubectl get svc -n my-app</code></pre>
+      </div>
+    </section>
+
+    <section class="card">
+      <span class="badge">Step 5</span>
+      <h2>ConfigMap</h2>
+      <p>
+        ConfigMap dipakai untuk konfigurasi non-rahasia seperti URL API, environment, atau nama aplikasi.
+      </p>
+
+      <div class="code-box">
+        <div class="code-header">
+          <span>k8s/configmap.yaml</span>
+          <button class="copy-btn">Copy</button>
+        </div>
+        <pre><code>apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+  namespace: my-app
+data:
+  APP_ENV: "production"
+  API_URL: "https://api.example.com"</code></pre>
+      </div>
+
+      <div class="code-box">
+        <div class="code-header">
+          <span>terminal</span>
+          <button class="copy-btn">Copy</button>
+        </div>
+        <pre><code>kubectl apply -f k8s/configmap.yaml</code></pre>
+      </div>
+    </section>
+
+    <section class="card">
+      <span class="badge">Step 6</span>
+      <h2>Secret</h2>
+      <p>
+        Secret dipakai untuk data sensitif seperti API key, password, token, dan credential.
+      </p>
+
+      <div class="code-box">
+        <div class="code-header">
+          <span>terminal</span>
+          <button class="copy-btn">Copy</button>
+        </div>
+        <pre><code>kubectl create secret generic frontend-secret \
+  --from-literal=API_KEY=ini_api_key_rahasia \
+  -n my-app</code></pre>
+      </div>
+    </section>
+
+    <section class="card">
+      <span class="badge">Step 7</span>
+      <h2>Deployment dengan ConfigMap & Secret</h2>
+
+      <div class="code-box">
+        <div class="code-header">
+          <span>bagian container</span>
+          <button class="copy-btn">Copy</button>
+        </div>
+        <pre><code>envFrom:
+  - configMapRef:
+      name: frontend-config
+  - secretRef:
+      name: frontend-secret</code></pre>
+      </div>
+
+      <p>
+        Tambahkan bagian tersebut di dalam container deployment.
+      </p>
+    </section>
+
+    <section class="card">
+      <span class="badge">Step 8</span>
+      <h2>Cek Logs & Debugging</h2>
+
+      <div class="code-box">
+        <div class="code-header">
+          <span>terminal</span>
+          <button class="copy-btn">Copy</button>
+        </div>
+        <pre><code>kubectl logs -f deployment/frontend -n my-app
+kubectl describe pod nama-pod -n my-app
+kubectl exec -it nama-pod -n my-app -- sh</code></pre>
+      </div>
+
+      <div class="note">
+        Kalau error ImagePullBackOff, cek image registry. Kalau CrashLoopBackOff, cek log aplikasi.
+      </div>
+    </section>
+
+    <section class="card">
+      <span class="badge">Step 9</span>
+      <h2>Scale Up & Scale Down</h2>
+
+      <div class="code-box">
+        <div class="code-header">
+          <span>terminal</span>
+          <button class="copy-btn">Copy</button>
+        </div>
+        <pre><code>kubectl scale deployment frontend --replicas=5 -n my-app
+kubectl scale deployment frontend --replicas=2 -n my-app
+kubectl get pods -n my-app</code></pre>
+      </div>
+    </section>
+
+    <section class="card">
+      <span class="badge">Step 10</span>
+      <h2>Rolling Update & Rollback</h2>
+
+      <div class="code-box">
+        <div class="code-header">
+          <span>terminal</span>
+          <button class="copy-btn">Copy</button>
+        </div>
+        <pre><code>kubectl set image deployment/frontend frontend=registry.example.com/my-app/frontend:v1.0.1 -n my-app
+kubectl rollout status deployment/frontend -n my-app
+kubectl rollout history deployment/frontend -n my-app
+kubectl rollout undo deployment/frontend -n my-app</code></pre>
+      </div>
+    </section>
+
+    <section class="card">
+      <span class="badge">Step 11</span>
+      <h2>Ingress</h2>
+      <p>
+        Ingress dipakai agar aplikasi bisa diakses dari luar cluster memakai domain.
+      </p>
+
+      <div class="code-box">
+        <div class="code-header">
+          <span>k8s/ingress.yaml</span>
+          <button class="copy-btn">Copy</button>
+        </div>
+        <pre><code>apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: frontend-ingress
+  namespace: my-app
+spec:
+  rules:
+    - host: frontend.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend-service
+                port:
+                  number: 80</code></pre>
+      </div>
+    </section>
+
+    <section class="card">
+      <span class="badge">Step 12</span>
+      <h2>CI/CD Flow</h2>
+
+      <div class="flow">
+        <div class="flow-item">Push Code</div>
+        <div class="flow-item">Build Image</div>
+        <div class="flow-item">Push Registry</div>
+        <div class="flow-item">Deploy K8s</div>
+        <div class="flow-item">Rolling Update</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <span class="badge">Step 13</span>
+      <h2>GitLab CI/CD</h2>
+
+      <div class="code-box">
+        <div class="code-header">
+          <span>.gitlab-ci.yml</span>
+          <button class="copy-btn">Copy</button>
+        </div>
+        <pre><code>stages:
+  - build
+  - deploy
+
+variables:
+  IMAGE_NAME: registry.example.com/my-app/frontend
+  NAMESPACE: my-app
+  DEPLOYMENT_NAME: frontend
+  CONTAINER_NAME: frontend
+
+build_image:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  only:
+    - main
+  script:
+    - docker build -t $IMAGE_NAME:$CI_COMMIT_SHORT_SHA .
+    - docker push $IMAGE_NAME:$CI_COMMIT_SHORT_SHA
+
+deploy_production:
+  stage: deploy
+  image: bitnami/kubectl:latest
+  only:
+    - main
+  script:
+    - kubectl config use-context production
+    - kubectl apply -f k8s/
+    - kubectl set image deployment/$DEPLOYMENT_NAME $CONTAINER_NAME=$IMAGE_NAME:$CI_COMMIT_SHORT_SHA -n $NAMESPACE
+    - kubectl rollout status deployment/$DEPLOYMENT_NAME -n $NAMESPACE</code></pre>
+      </div>
+    </section>
+
+    <section class="card">
+      <span class="badge">Cheat Sheet</span>
+      <h2>Command Harian Kubernetes</h2>
+
+      <div class="code-box">
+        <div class="code-header">
+          <span>terminal</span>
+          <button class="copy-btn">Copy</button>
+        </div>
+        <pre><code>kubectl get all -n my-app
+kubectl get pods -n my-app
+kubectl get svc -n my-app
+kubectl get deploy -n my-app
+kubectl logs -f deployment/frontend -n my-app
+kubectl rollout restart deployment/frontend -n my-app
+kubectl rollout undo deployment/frontend -n my-app
+kubectl describe pod nama-pod -n my-app</code></pre>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    Kubernetes itu bukan sekadar YAML. YAML cuma surat tugasnya, cluster yang kerja keras.
+  </footer>
+
+  <script>
+    const buttons = document.querySelectorAll(".copy-btn");
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", async () => {
+        const codeBox = button.closest(".code-box");
+        const code = codeBox.querySelector("code").innerText;
+
+        try {
+          await navigator.clipboard.writeText(code);
+          button.innerText = "Copied!";
+          setTimeout(() => {
+            button.innerText = "Copy";
+          }, 1500);
+        } catch (error) {
+          button.innerText = "Failed";
+          setTimeout(() => {
+            button.innerText = "Copy";
+          }, 1500);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
